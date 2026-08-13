@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GUI Memory Taxonomy — Labeling</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🏷️</text></svg>">
+</head>
+<body>
+
+<!-- ── Sign-in gate ─────────────────────────────────────────────── -->
+<div id="gate" class="gate">
+  <div class="gate-card">
+    <h1>GUI Memory Taxonomy<span>라벨링</span></h1>
+    <p class="gate-lede">
+      스크린샷과 다음 액션을 보고 <b>TASK / TARGET FORM / ACTION / DOMAIN</b> 네 축을 라벨링합니다.
+      한 건에 30초~1분 정도 걸립니다.
+    </p>
+    <p class="gate-first">
+      처음이신가요? <a href="guide.html" target="_blank" rel="noopener">라벨링 가이드</a>를 먼저 읽어 주세요 —
+      네 축의 의미와 헷갈리는 경우를 예시로 설명합니다. 10분이면 충분합니다.
+    </p>
+    <p class="gate-note" id="gate-status">준비 중…</p>
+    <button id="gate-start" class="primary" disabled>시작하기</button>
+    <details class="gate-help">
+      <summary>규칙만 빠르게 훑기</summary>
+      <div id="gate-rules"></div>
+    </details>
+  </div>
+</div>
+
+<!-- ── Main app ─────────────────────────────────────────────────── -->
+<div id="app" class="app" hidden>
+  <header class="topbar">
+    <div class="brand">GUI Taxonomy<span class="sep">/</span><span class="muted">Labeling</span></div>
+    <div class="progress-stack">
+      <div class="progress">
+        <span class="progress-label">내 큐</span>
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+        <span id="progress-text" class="mono">0 / 0</span>
+      </div>
+      <div class="progress global-progress" title="현재 공개된 큐의 중복 배정을 포함한 서버 저장 완료율">
+        <span class="progress-label">공개큐</span>
+        <div class="progress-bar"><div id="global-progress-fill"></div></div>
+        <span id="global-progress-text" class="mono">0 / 0 · 0%</span>
+      </div>
+      <div class="progress final-progress" title="최종 목표: AgentNetBench 1,208개 + AgentNet 30,000개 전수 라벨링">
+        <span class="progress-label">최종</span>
+        <div class="progress-bar"><div id="final-progress-fill"></div></div>
+        <span id="final-progress-text" class="mono">0 / 31,208 · 0%</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="sync-badge" class="badge">동기화 대기</span>
+      <a class="ghost link-btn" href="guide.html" target="_blank" rel="noopener" title="라벨링 가이드 (새 탭)">가이드</a>
+      <button id="btn-export" class="ghost" title="내 라벨을 JSONL로 내려받기">내보내기</button>
+      <button id="btn-help" class="ghost" title="단축키 / 규칙 (?)">?</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- Screenshot -->
+    <section class="pane image-pane">
+      <div class="pane-head">
+        <div class="chips">
+          <span id="chip-dataset" class="chip"></span>
+          <span id="chip-priority" class="chip priority" hidden></span>
+          <span id="chip-stratum" class="chip"></span>
+          <span id="chip-id" class="chip mono subtle"></span>
+        </div>
+        <div class="tools">
+          <button id="btn-marker" class="ghost active" title="액션 지점 표시 (m)">◎ 타깃</button>
+          <button id="btn-zoom" class="ghost" title="확대 (z)">확대 1×</button>
+          <button id="btn-loupe" class="ghost active" title="돋보기 (l)">돋보기</button>
+        </div>
+      </div>
+      <div id="stage" class="stage">
+        <div id="canvas" class="canvas">
+          <img id="shot" alt="screenshot">
+          <div id="marker" class="marker"><i></i></div>
+        </div>
+      </div>
+      <div id="loupe" class="loupe"><div id="loupe-img"></div><span class="loupe-tag">타깃 3×</span></div>
+    </section>
+
+    <!-- Form -->
+    <section class="pane form-pane">
+      <div class="context">
+        <div class="ctx-row task-context">
+          <span class="ctx-k">전체 과제</span>
+          <p id="ctx-instruction" class="ctx-v"></p>
+        </div>
+        <div class="ctx-row">
+          <span class="ctx-k">이번 액션</span>
+          <p id="ctx-action" class="ctx-v strong"></p>
+        </div>
+        <div class="ctx-row">
+          <span class="ctx-k">원본 코드</span>
+          <p id="ctx-code" class="ctx-v mono"></p>
+        </div>
+        <div id="model-hint" class="model-hint" hidden></div>
+      </div>
+
+      <div class="axes">
+        <div class="axis" data-axis="task">
+          <div class="axis-head"><h2>TASK</h2><span class="hint">이번 액션의 즉각적 절차 효과 · 숫자키 1–8</span></div>
+          <div class="opts" id="opts-task"></div>
+        </div>
+
+        <div class="axis" data-axis="action">
+          <div class="axis-head"><h2>ACTION</h2><span class="hint">원본 코드에서 자동 확정 · 사람이 고르지 않음</span></div>
+          <div id="action-auto" class="action-auto" hidden></div>
+          <div class="opts" id="opts-action"></div>
+        </div>
+
+        <div class="axis" data-axis="target_form">
+          <div class="axis-head"><h2>TARGET FORM</h2><span class="hint">실제 조작 대상의 보이는 형태·상태 (텍스트/아이콘 이름 금지)</span></div>
+          <input id="search-target_form" class="search" type="text" placeholder="검색 (f)…">
+          <div class="opts grouped" id="opts-target_form"></div>
+        </div>
+
+        <div class="axis" data-axis="domain">
+          <div class="axis-head"><h2>DOMAIN</h2><span class="hint">현재 타깃이 속한 화면 표면 · 아래 순서에서 처음 맞는 하나</span></div>
+          <div id="domain-ladder" class="domain-ladder"></div>
+          <div class="opts" id="opts-domain"></div>
+        </div>
+      </div>
+
+      <div class="submit-bar">
+        <label class="check"><input id="unsure" type="checkbox"> 애매함 (검토 필요)</label>
+        <input id="notes" class="notes" type="text" maxlength="2000" placeholder="메모 (선택)">
+        <button id="btn-skip" class="ghost">건너뛰기</button>
+        <button id="btn-submit" class="primary" disabled>제출 <kbd>↵</kbd></button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ── Help overlay ─────────────────────────────────────────────── -->
+<div id="help" class="overlay" hidden>
+  <div class="overlay-card">
+    <button class="overlay-close" data-close>✕</button>
+    <h2>단축키</h2>
+    <table class="keys">
+      <tr><td><kbd>1</kbd>–<kbd>8</kbd></td><td>TASK 선택</td></tr>
+      <tr><td>ACTION</td><td>원본 코드에서 자동 확정되므로 선택하지 않습니다</td></tr>
+      <tr><td><kbd>f</kbd></td><td>TARGET FORM 검색창으로 이동</td></tr>
+      <tr><td><kbd>m</kbd> <kbd>z</kbd> <kbd>l</kbd></td><td>타깃 마커 / 확대 / 돋보기 토글</td></tr>
+      <tr><td><kbd>↵</kbd></td><td>제출</td></tr>
+      <tr><td><kbd>]</kbd></td><td>건너뛰기</td></tr>
+      <tr><td><kbd>?</kbd></td><td>이 창</td></tr>
+    </table>
+    <h2>라벨링 규칙</h2>
+    <div id="help-rules"></div>
+    <p class="overlay-more"><a href="guide.html" target="_blank" rel="noopener">전체 가이드 열기 →</a></p>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

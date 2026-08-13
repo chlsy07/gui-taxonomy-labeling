@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>라벨링 가이드 — GUI Memory Taxonomy</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="guide.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🏷️</text></svg>">
+</head>
+<body class="guide-body">
+
+<nav class="guide-nav">
+  <a class="back" href="index.html">← 라벨링으로</a>
+  <ol>
+    <li><a href="#what">무엇을 하나</a></li>
+    <li><a href="#golden">3가지 원칙</a></li>
+    <li><a href="#task">TASK</a></li>
+    <li><a href="#form">TARGET FORM</a></li>
+    <li><a href="#action">ACTION</a></li>
+    <li><a href="#domain">DOMAIN</a></li>
+    <li><a href="#confuse">헷갈리는 경우</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</nav>
+
+<main class="guide">
+
+<h1>라벨링 가이드</h1>
+<p class="lede">
+  처음이어도 이 문서만 읽으면 바로 시작할 수 있습니다. 10분이면 충분하고,
+  헷갈릴 때 <b>헷갈리는 경우</b> 절만 다시 보면 됩니다.
+</p>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="what">
+<h2>1. 무엇을 하는 작업인가</h2>
+
+<p>
+  화면 하나와 <b>그 화면에서 지금 하려는 동작 하나</b>가 주어집니다.
+  그 동작을 네 가지 축으로 분류합니다.
+</p>
+
+<div class="axis-cards">
+  <div class="axis-card">
+    <h3>TASK</h3>
+    <p><b>무엇을 하려는가</b><br>이 동작의 즉각적인 목적</p>
+    <span class="count">8개 중 택 1</span>
+  </div>
+  <div class="axis-card">
+    <h3>TARGET FORM</h3>
+    <p><b>무엇을 누르는가</b><br>조작 대상의 생김새와 상태</p>
+    <span class="count">38개 중 택 1</span>
+  </div>
+  <div class="axis-card">
+    <h3>ACTION</h3>
+    <p><b>어떻게 누르는가</b><br>손가락·키보드의 물리적 동작</p>
+    <span class="count">원본 코드에서 자동 확정</span>
+  </div>
+  <div class="axis-card">
+    <h3>DOMAIN</h3>
+    <p><b>어디에서 하는가</b><br>화면이 속한 기능 분야</p>
+    <span class="count">12개 중 택 1</span>
+  </div>
+</div>
+
+<p>
+  이 라벨은 <b>"AI 에이전트가 과거 기억을 재활용할 수 있는가"</b>를 측정하는 데 쓰입니다.
+  그래서 "화면에 뭐라고 쓰여 있나"가 아니라 <b>"동작이 절차적으로 같은가"</b>를 기준으로 나눕니다.
+  예를 들어 쇼핑몰의 <span class="ui">장바구니 담기</span> 버튼과 메일의 <span class="ui">보내기</span> 버튼은
+  글자가 전혀 다르지만, 둘 다 <b>"보이는 버튼을 눌러 명령을 실행"</b>이라는 같은 절차입니다.
+  그래서 같은 라벨(<code>EXECUTE</code> / <code>command_button</code> / <code>click</code>)을 받습니다.
+</p>
+
+<div class="note">
+  <b>화면에 뜨는 정보</b><br>
+  ① 스크린샷 — <b>빨간 원이 실제 클릭 좌표</b>입니다. 우하단 돋보기가 그 지점을 3배로 확대해 보여줍니다.<br>
+  ② 과제 — 사용자가 원래 시키려던 전체 작업<br>
+  ③ 이번 액션 — 지금 이 한 동작에 대한 설명<br>
+  ④ 원본 코드 — <code>pyautogui.click(x=0.44, y=0.25)</code> 같은 실제 실행 코드
+</div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="golden">
+<h2>2. 반드시 지켜야 할 3가지</h2>
+
+<div class="rule">
+  <span class="rule-n">1</span>
+  <div>
+    <h3>글이 아니라 화면을 보고 판단합니다</h3>
+    <p>
+      "이번 액션" 설명만 읽고 라벨하면 안 됩니다. 설명과 화면이 어긋나는 경우가 실제로 있고,
+      그럴 때는 <b>화면과 클릭 지점이 이깁니다.</b> 설명에 "메뉴를 연다"고 써 있어도
+      빨간 원이 체크박스 위에 있으면 체크박스입니다.
+    </p>
+  </div>
+</div>
+
+<div class="rule">
+  <span class="rule-n">2</span>
+  <div>
+    <h3>빨간 원이 찍힌 그 대상만 봅니다</h3>
+    <p>
+      주변 행 전체나 카드 전체가 아니라, <b>정확히 그 점에 있는 컨트롤</b>이 대상입니다.
+      목록 행 오른쪽 끝의 작은 점 세 개를 눌렀다면 대상은 "목록 항목"이 아니라 "메뉴 열기 버튼"입니다.
+      확대(클릭 또는 <kbd>z</kbd>)해서 정확히 무엇 위인지 확인하세요.
+    </p>
+  </div>
+</div>
+
+<div class="rule">
+  <span class="rule-n">3</span>
+  <div>
+    <h3>버튼에 쓰인 글자를 라벨로 쓰지 않습니다</h3>
+    <p>
+      <span class="ui">저장</span>, <span class="ui">다운로드</span>, 톱니바퀴, 햄버거는
+      라벨이 아니라 <b>판단 근거</b>입니다. 우리가 기록하는 것은 "무슨 글자인가"가 아니라
+      <b>"어떤 형태의 UI 요소인가"</b>입니다. 그래야 다른 앱의 비슷한 버튼과 비교할 수 있습니다.
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="task">
+<h2>3. TASK — 무엇을 하려는가</h2>
+
+<p class="axis-lede">
+  <b>이 한 동작</b>의 효과만 봅니다. 전체 과제가 "항공권 예약"이어도,
+  지금 검색창을 누르는 중이라면 TASK는 예약이 아니라 <code>LOCATE</code>입니다.
+</p>
+
+<table class="vocab">
+<thead><tr><th>라벨</th><th>의미</th><th>예시</th></tr></thead>
+<tbody>
+<tr><td><code>ACCESS</code></td><td>메뉴·페이지·패널·설정·도구·대화상자를 <b>열어서 접근</b></td>
+    <td>파일 메뉴 열기, 설정 페이지 진입, 사이드바 펼치기</td></tr>
+<tr><td><code>AUTHOR</code></td><td>텍스트·문서·콘텐츠를 <b>만들거나 편집</b></td>
+    <td>메일 본문 입력, 문서에 문장 추가, 댓글 작성</td></tr>
+<tr><td><code>CONFIGURE</code></td><td>옵션·파라미터·설정값·권한을 <b>변경</b></td>
+    <td>알림 끄기, 정렬 기준 바꾸기, 폼에 인원수 입력</td></tr>
+<tr><td><code>EXECUTE</code></td><td>실행·저장·전송·제출·적용·확정 등 <b>명령을 발사</b></td>
+    <td>보내기, 저장, 결제, 검색 실행, 내보내기</td></tr>
+<tr><td><code>INSPECT</code></td><td>내용을 <b>보려고</b> 열기·선택·펼치기</td>
+    <td>메일 열어 읽기, 상품 상세 보기, 항목 펼치기</td></tr>
+<tr><td><code>LOCATE</code></td><td>검색·필터·이동·스크롤로 <b>대상을 찾기</b></td>
+    <td>검색어 입력, 스크롤 내리기, 필터 적용, 탭 이동</td></tr>
+<tr><td><code>ORGANIZE</code></td><td>이동·정렬·그룹·선택·재배치로 <b>구조 바꾸기</b></td>
+    <td>파일 드래그 이동, 항목 여러 개 선택, 순서 바꾸기</td></tr>
+<tr><td><code>REFINE</code></td><td>스타일·색·서식·크기·레이아웃 등 <b>외형 다듬기</b></td>
+    <td>글자 굵게, 색 바꾸기, 이미지 크기 조정</td></tr>
+</tbody>
+</table>
+
+<div class="pair">
+  <div><h4>ACCESS vs INSPECT</h4>
+    <p><code>ACCESS</code>는 <b>나중에 일하려고 통로를 여는 것</b>, <code>INSPECT</code>는 <b>내용 자체를 보려는 것</b>입니다.
+    설정 메뉴를 여는 건 ACCESS, 메일을 열어 읽는 건 INSPECT.</p></div>
+  <div><h4>LOCATE vs EXECUTE</h4>
+    <p>검색 버튼이라도 <b>목적이 찾기</b>면 <code>LOCATE</code>입니다. 저장·전송처럼 <b>작업을 확정</b>하면 <code>EXECUTE</code>.</p></div>
+  <div><h4>AUTHOR vs CONFIGURE</h4>
+    <p>입력한 글자가 <b>콘텐츠로 남으면</b> <code>AUTHOR</code>, <b>설정·폼 값</b>이면 <code>CONFIGURE</code>.
+    메일 본문은 AUTHOR, 인원수 입력은 CONFIGURE.</p></div>
+  <div><h4>CONFIGURE vs REFINE</h4>
+    <p><b>기능</b>이 바뀌면 <code>CONFIGURE</code>, <b>겉모습</b>만 바뀌면 <code>REFINE</code>.</p></div>
+</div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="form">
+<h2>4. TARGET FORM — 무엇을 누르는가</h2>
+
+<p class="axis-lede">
+  가장 어렵고 가장 중요한 축입니다. <b>글자가 아니라 형태</b>, 그리고 <b>지금 상태</b>를 봅니다.
+  38개지만 그룹으로 나뉘어 있고 검색(<kbd>f</kbd>)이 되니 겁먹지 마세요.
+</p>
+
+<h3 class="grp">버튼 / 명령</h3>
+<table class="vocab">
+<tr><td><code>command_button</code></td><td>글자가 있는 보통 버튼. 누르면 명령이 실행됨 <span class="eg">저장, 확인, 검색, 장바구니 담기</span></td></tr>
+<tr><td><code>icon_button</code></td><td>아이콘만 있는 독립 버튼 <span class="eg">돋보기 아이콘, X 닫기 버튼</span></td></tr>
+<tr><td><code>toolbar_button</code></td><td>툴바·리본 <b>안에</b> 들어 있는 버튼 <span class="eg">워드 리본의 굵게 버튼</span></td></tr>
+</table>
+
+<h3 class="grp">메뉴 — 위치와 단계로 구분합니다</h3>
+<table class="vocab">
+<tr><td><code>top_level_menu_opener</code></td><td>화면 최상단 메뉴바의 항목 <span class="eg">파일, 편집, 보기, 도구</span></td></tr>
+<tr><td><code>app_menu_button</code></td><td>앱·브라우저 <b>전역</b> 메뉴 버튼 <span class="eg">크롬 오른쪽 위 점 3개, 햄버거 ☰</span></td></tr>
+<tr><td><code>menu_opener</code></td><td>화면 안의 <b>지역</b> 메뉴 열기 <span class="eg">목록 행 끝의 점 3개, 작은 옵션 버튼, 우클릭 메뉴 유발</span></td></tr>
+<tr><td><code>submenu_opener</code></td><td><b>이미 열린 메뉴 안에서</b> 하위 메뉴를 여는 항목 <span class="eg">"내보내기 ▸"</span></td></tr>
+<tr><td><code>menu_item</code></td><td><b>열린 메뉴 안의</b> 실행 항목 <span class="eg">열린 파일 메뉴의 "인쇄"</span></td></tr>
+<tr><td><code>menu_item:on</code> / <code>:off</code></td><td>체크 표시가 있는 메뉴 항목. 현재 체크 여부로 구분</td></tr>
+</table>
+<div class="note tight">
+  <b>메뉴 판단 순서</b> — ① 최상단 메뉴바인가 → <code>top_level_menu_opener</code>
+  ② 앱 전체 메뉴인가 → <code>app_menu_button</code>
+  ③ 이미 <b>메뉴가 열려 있는 상태</b>에서 누르는가 → 하위 메뉴를 열면 <code>submenu_opener</code>, 실행하면 <code>menu_item</code>
+  ④ 그 외 화면 안에서 메뉴를 여는 것 → <code>menu_opener</code>
+</div>
+
+<h3 class="grp">드롭다운 / 목록 — <b>열리기 전과 후는 다른 라벨</b></h3>
+<table class="vocab">
+<tr><td><code>closed_dropdown_field</code></td><td><b>아직 닫혀 있는</b> 선택 상자나 그 화살표를 눌러서 여는 순간 <span class="eg">"국가 선택 ▾"을 클릭</span></td></tr>
+<tr><td><code>open_dropdown_item</code></td><td><b>이미 열린</b> 목록에서 항목 하나를 고르는 순간 <span class="eg">펼쳐진 목록에서 "대한민국" 클릭</span></td></tr>
+<tr><td><code>list_item</code></td><td>드롭다운이 아니라 <b>항상 떠 있는</b> 목록·표의 항목 <span class="eg">메일함의 메일 한 줄, 검색 결과 한 줄</span></td></tr>
+</table>
+<div class="note tight">
+  같은 드롭다운이라도 <b>여는 클릭</b>과 <b>고르는 클릭</b>은 절차가 다르므로 반드시 구분합니다.
+  화면에 목록이 펼쳐져 있으면 <code>open_dropdown_item</code>, 아직 닫혀 있으면 <code>closed_dropdown_field</code>.
+</div>
+
+<h3 class="grp">입력</h3>
+<table class="vocab">
+<tr><td><code>text_input_field</code></td><td>일반 텍스트 입력칸, 본문 편집 영역 <span class="eg">메일 본문, 댓글창, 이름 입력칸</span></td></tr>
+<tr><td><code>numeric_input_field</code></td><td>값이 주로 <b>숫자</b>인 칸 <span class="eg">인원수, 수량, 크기</span></td></tr>
+<tr><td><code>search_box</code></td><td><b>검색</b>용 입력칸 — 글자를 받아도 검색이면 이쪽</td></tr>
+</table>
+
+<h3 class="grp">상태가 있는 선택 — <code>:on</code> / <code>:off</code></h3>
+<table class="vocab">
+<tr><td><code>checkbox_option</code> <code>:on</code> <code>:off</code></td><td>체크박스 ☑ ☐</td></tr>
+<tr><td><code>radio_option</code> <code>:on</code> <code>:off</code></td><td>라디오 버튼 ◉ ○ (여럿 중 하나만)</td></tr>
+<tr><td><code>toggle_option</code> <code>:on</code> <code>:off</code></td><td>토글 스위치</td></tr>
+</table>
+<div class="note tight">
+  접미사는 <b>누르기 직전의 현재 상태</b>를 뜻합니다. 켜져 있는 걸 누르면 <code>:on</code>, 꺼져 있는 걸 누르면 <code>:off</code>.
+  같은 클릭이라도 현재 상태에 따라 결과가 정반대가 되기 때문에 구분합니다.
+  <b>화면에서 상태가 안 보이면 접미사 없는 기본 라벨</b>을 쓰세요. 추측하지 않습니다.
+</div>
+
+<h3 class="grp">셀 / 문서 영역</h3>
+<table class="vocab">
+<tr><td><code>cell</code></td><td>스프레드시트·표·달력·격자의 칸</td></tr>
+<tr><td><code>header_cell</code></td><td>표의 <b>머리글</b> 칸. 누르면 정렬·행열 선택 같은 머리글 전용 동작이 일어남</td></tr>
+<tr><td><code>document_text</code></td><td>문서·편집기 안의 <b>기존 텍스트</b>를 대상으로 잡는 경우 <span class="eg">문단을 드래그 선택</span></td></tr>
+<tr><td><code>visual_region</code></td><td>캔버스·이미지·빈 공간 등 <b>뚜렷한 컨트롤이 아닌</b> 영역</td></tr>
+</table>
+
+<h3 class="grp">이동 / 시각 항목</h3>
+<table class="vocab">
+<tr><td><code>navigation_entry</code></td><td>사이드바·내비게이션 트리의 항목 <span class="eg">받은편지함, 내 드라이브</span></td></tr>
+<tr><td><code>tab</code></td><td>탭 <span class="eg">브라우저 탭, 설정 화면의 탭</span></td></tr>
+<tr><td><code>link</code></td><td>하이퍼링크</td></tr>
+<tr><td><code>thumbnail_item</code></td><td>썸네일·카드 형태의 시각 항목 <span class="eg">템플릿, 동영상 카드, 슬라이드 미리보기</span></td></tr>
+</table>
+
+<h3 class="grp">직접 조작</h3>
+<table class="vocab">
+<tr><td><code>slider_handle</code></td><td>슬라이더 손잡이</td></tr>
+<tr><td><code>scrollbar_thumb</code></td><td>스크롤바의 막대를 직접 잡아 끌 때</td></tr>
+<tr><td><code>spinner_button:up</code> / <code>:down</code></td><td>숫자 칸 옆의 <b>▲▼ 화살표</b>. 방향까지 기록</td></tr>
+</table>
+<div class="note tight">
+  드롭다운의 ▾ 화살표는 스피너가 <b>아닙니다.</b> 그건 <code>closed_dropdown_field</code>입니다.
+</div>
+
+<h3 class="grp">마지막 수단</h3>
+<table class="vocab">
+<tr><td><code>dialog_option</code></td><td>대화상자 안의 옵션인데 위 어떤 형태에도 안 맞을 때. <b>정말 안 맞을 때만</b> 사용하고, 메모를 남겨 주세요</td></tr>
+</table>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="action">
+<h2>5. ACTION — 코드에서 자동으로 정해짐</h2>
+
+<p class="axis-lede">
+  <b>사람이 선택하지 않습니다.</b> 원본 코드에 적힌 물리적 동작을 앱이 자동으로 넣습니다.
+  검색하려고 글자를 쳤어도 ACTION은 <code>type</code>이고, 찾는 의도는 TASK의 <code>LOCATE</code>에 기록됩니다.
+</p>
+
+<table class="vocab">
+<tr><td><code>click</code></td><td>한 번 클릭</td></tr>
+<tr><td><code>double_click</code></td><td>더블 클릭</td></tr>
+<tr><td><code>right_click</code></td><td>오른쪽 클릭</td></tr>
+<tr><td><code>drag</code></td><td>누른 채로 끌기</td></tr>
+<tr><td><code>scroll</code></td><td>휠·트랙패드 스크롤</td></tr>
+<tr><td><code>type</code></td><td>글자·값 입력 (붙여넣기 포함)</td></tr>
+<tr><td><code>press_enter</code></td><td>Enter로 확정·검색·제출</td></tr>
+<tr><td><code>hotkey</code></td><td>키 입력·단축키 조합 <span class="eg">Backspace, Space, Ctrl+C, Ctrl+V</span></td></tr>
+<tr><td><code>terminate</code></td><td>에피소드 종료. GUI 입력은 발생하지 않음</td></tr>
+<tr><td><code>wait</code></td><td>UI가 바뀌기를 기다림. GUI 입력은 발생하지 않음</td></tr>
+</table>
+
+<div class="note tight">
+  원본 코드 읽는 법 — <code>pyautogui.click</code> → click, <code>doubleClick</code> → double_click,
+  <code>write</code>/<code>typewrite</code> → type, <code>hotkey('ctrl','v')</code> → hotkey,
+  <code>press('enter')</code> → press_enter, 그 외 <code>press</code> → hotkey,
+  <code>scroll</code> → scroll, <code>dragTo</code> → drag,
+  <code>computer.terminate</code> → terminate, <code>computer.wait</code> → wait.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="domain">
+<h2>6. DOMAIN — 어디에서 하는가</h2>
+
+<p class="axis-lede">
+  DOMAIN은 여러 단어가 동시에 떠오르는 태그가 아닙니다. <b>현재 타깃이 속한 화면 표면</b>을
+  아래 순서로 검사하고, <b>처음 맞는 한 항목에서 멈춥니다.</b> 이 순서가 12개 분류를 서로 배타적으로 만듭니다.
+</p>
+
+<table class="vocab">
+<tr><td><b>1.</b> <code>Security, Accounts &amp; Credentials</code></td><td>로그인·비밀번호·인증·계정 보안·권한 동의 <b>화면</b>. 어느 앱 안에 있어도 최우선</td></tr>
+<tr><td><b>2.</b> <code>System, Files &amp; OS Settings</code></td><td>OS 설정·탐색기·바탕화면·작업표시줄·OS 파일 열기/저장 창. 호출한 앱은 무시</td></tr>
+<tr><td><b>3.</b> <code>Search, Browser &amp; Maps</code></td><td>브라우저 주소창·탭·설정·방문기록, Google/Naver 같은 <b>범용 검색 결과</b>, 지도·길찾기만</td></tr>
+<tr><td><b>4.</b> <code>Documents &amp; Productivity</code></td><td>문서·표·슬라이드·메모·PDF·할 일·클라우드 드라이브 작업 화면</td></tr>
+<tr><td><b>5.</b> <code>Communication, Social &amp; Scheduling</code></td><td>메일·채팅·회의·캘린더·SNS·연락처 화면</td></tr>
+<tr><td><b>6.</b> <code>Commerce, Travel &amp; Services</code></td><td>상품·예약·여행·배달·채용·장바구니·결제·고객 서비스 화면</td></tr>
+<tr><td><b>7.</b> <code>Media, Entertainment &amp; Gaming</code></td><td>영상·음악 <b>소비</b>, 스트리밍 탐색, 게임 화면. 제작·편집 화면은 제외</td></tr>
+<tr><td><b>8.</b> <code>Developer, Cloud &amp; Data</code></td><td>코드·터미널·저장소·이슈·클라우드 콘솔·분석·노트북·LaTeX 화면</td></tr>
+<tr><td><b>9.</b> <code>Research, Education &amp; Reference</code></td><td>학술 검색·논문·강의·학교·백과·참고자료 전용 화면. 범용 검색 결과는 제외</td></tr>
+<tr><td><b>10.</b> <code>AI Assistants &amp; Generation</code></td><td>AI 대화·프롬프트·생성 결과를 다루는 화면</td></tr>
+<tr><td><b>11.</b> <code>Creative &amp; Media Editing</code></td><td>이미지·영상·음성·디자인을 직접 제작·편집하는 화면</td></tr>
+<tr><td><b>12.</b> <code>General Web/App</code></td><td>뉴스·블로그·회사 소개처럼 위 기능 도구가 아닌 <b>읽기 중심 일반 정보 화면</b>. 애매함용 라벨이 아님</td></tr>
+</table>
+
+<div class="note tight">
+  <b>검색은 동작이지 항상 Search DOMAIN은 아닙니다.</b><br>
+  Google Scholar·arXiv·PubMed·위키백과 안에서 검색 → <code>Research, Education &amp; Reference</code><br>
+  Amazon 안에서 상품 검색 → <code>Commerce, Travel &amp; Services</code><br>
+  Google/Naver 통합검색 결과 → <code>Search, Browser &amp; Maps</code><br>
+  “찾는 중”이라는 사실은 이미 TASK의 <code>LOCATE</code>가 기록합니다.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="confuse">
+<h2>7. 자주 헷갈리는 경우</h2>
+
+<div class="cases">
+<div class="case">
+  <h4>목록 행의 끝에 있는 점 세 개를 눌렀다</h4>
+  <p>대상은 목록 항목이 아니라 <b>메뉴를 여는 버튼</b>입니다 → <code>menu_opener</code>.
+  라벨은 "무엇 안에 있나"가 아니라 <b>"정확히 무엇을 눌렀나"</b>로 정합니다.</p>
+</div>
+<div class="case">
+  <h4>메뉴가 열려 있고 그 안의 항목을 눌렀다</h4>
+  <p>화면에 <b>메뉴가 펼쳐진 상태</b>면 그 안의 항목은 <code>menu_item</code>입니다.
+  화살표(▸)가 붙어 하위 메뉴가 나오면 <code>submenu_opener</code>.</p>
+</div>
+<div class="case">
+  <h4>선택 상자를 눌렀는데 목록이 안 보인다</h4>
+  <p>스크린샷은 <b>누르기 직전</b> 상태입니다. 목록이 아직 안 보이면 여는 중이므로
+  <code>closed_dropdown_field</code>입니다.</p>
+</div>
+<div class="case">
+  <h4>체크박스인데 켜졌는지 꺼졌는지 안 보인다</h4>
+  <p>확대(<kbd>z</kbd>)해도 안 보이면 <b>추측하지 말고</b> 접미사 없는 <code>checkbox_option</code>을 쓰세요.
+  잘못된 <code>:on</code>보다 정직한 무접미사가 낫습니다.</p>
+</div>
+<div class="case">
+  <h4>검색창에 글자를 입력했다</h4>
+  <p>세 축이 각각 다릅니다 — TASK는 찾는 중이니 <code>LOCATE</code>,
+  FORM은 검색칸이니 <code>search_box</code>, ACTION은 입력이니 <code>type</code>.</p>
+</div>
+<div class="case">
+  <h4>Ctrl+V로 메일 본문에 붙여넣었다</h4>
+  <p>TASK <code>AUTHOR</code>(콘텐츠가 됨), FORM <code>text_input_field</code>(본문 입력칸),
+  ACTION <code>hotkey</code>(코드가 단축키). 의도가 입력이어도 동작은 단축키입니다.</p>
+</div>
+<div class="case">
+  <h4>빨간 원이 아예 없다</h4>
+  <p>키보드 입력이나 종료 동작이라 좌표가 없는 경우입니다.
+  "이번 액션" 설명과 화면을 보고 <b>어느 칸에 입력되는지</b> 판단하세요.</p>
+</div>
+<div class="case">
+  <h4>정말 모르겠다</h4>
+  <p><b>가장 가까운 라벨을 고르고</b> "애매함"에 체크한 뒤 메모를 남겨 주세요.
+  건너뛰면 정보가 0이지만, 애매함 표시된 답은 나중에 우선 검토 대상이 되어 쓸모가 있습니다.</p>
+</div>
+</div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section id="faq">
+<h2>8. 자주 묻는 것</h2>
+
+<dl class="faq">
+<dt>모델이 붙인 라벨이 보일 때와 안 보일 때가 있어요</dt>
+<dd>의도한 것입니다. 이미 <b>의심스럽다고 분류된 항목</b>은 모델 답을 보여주고 고치게 해서 시간을 아낍니다.
+나머지는 <b>모델 정확도를 공정하게 측정</b>하려는 표본이라, 답을 보면 측정이 무의미해지므로 가립니다.</dd>
+
+<dt>몇 개나 해야 하나요?</dt>
+<dd>정해진 할당량은 없습니다. 하는 만큼 도움이 되고, 중간에 그만둬도 그때까지 제출한 건 모두 저장됩니다.</dd>
+
+<dt>남이 이미 한 항목을 또 하게 되나요?</dt>
+<dd>아닙니다. 앱이 서버에서 진행 상황을 읽어 <b>아직 안 된 것만</b> 배정합니다.
+다만 일부는 <b>일부러 두 사람에게</b> 줍니다 — 사람끼리 얼마나 일치하는지 재기 위해서입니다.</dd>
+
+<dt>실수로 잘못 제출했어요</dt>
+<dd>되돌리는 기능은 없습니다. 대신 메모에 남겨 주시면 집계할 때 걸러낼 수 있습니다.</dd>
+
+<dt>인터넷이 끊기면요?</dt>
+<dd>라벨이 브라우저에 저장됐다가 연결되면 자동 전송됩니다. 오른쪽 위 표시로 상태를 알 수 있고,
+"내보내기"로 파일 저장도 가능합니다.</dd>
+
+<dt>얼마나 걸리나요?</dt>
+<dd>익숙해지면 한 건에 30초 정도입니다. ACTION은 자동으로 들어갑니다.
+숫자키(TASK), <kbd>f</kbd>(형태 검색), <kbd>Enter</kbd>(제출)를 쓰면 더 빠릅니다.</dd>
+</dl>
+</section>
+
+<p class="tail"><a class="primary-link" href="index.html">라벨링 시작하기 →</a></p>
+
+</main>
+</body>
+</html>

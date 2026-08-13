@@ -1,0 +1,88 @@
+/* Reading layout for the labeling guide. Loads on top of styles.css. */
+
+.guide-body { height: auto; display: block; background: var(--bg); }
+
+.guide-nav {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(22, 27, 35, .93); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 18px; padding: 10px 24px; flex-wrap: wrap;
+}
+.guide-nav .back { color: var(--accent); text-decoration: none; font-size: 13px; white-space: nowrap; }
+.guide-nav .back:hover { text-decoration: underline; }
+.guide-nav ol { list-style: none; display: flex; gap: 14px; margin: 0; padding: 0; flex-wrap: wrap; }
+.guide-nav a { color: var(--fg-3); text-decoration: none; font-size: 12.5px; }
+.guide-nav a:hover { color: var(--fg); }
+
+.guide { max-width: 880px; margin: 0 auto; padding: 40px 24px 90px; }
+.guide h1 { font-size: 28px; letter-spacing: -.4px; margin: 0 0 12px; }
+.guide .lede { color: var(--fg-2); font-size: 15px; margin: 0 0 44px; }
+.guide section { margin-bottom: 56px; scroll-margin-top: 70px; }
+.guide h2 { font-size: 19px; letter-spacing: -.2px; margin: 0 0 16px;
+            padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.guide h3.grp { font-size: 13.5px; color: var(--accent); margin: 26px 0 8px; font-weight: 620; }
+.guide p { color: var(--fg-2); }
+.guide b { color: var(--fg); font-weight: 620; }
+.guide code { font-family: var(--mono); font-size: 12px; background: var(--bg-3);
+              padding: 2px 6px; border-radius: 5px; color: #9fd0ff; white-space: nowrap; }
+.axis-lede { font-size: 14.5px; margin: 0 0 18px; }
+
+.ui { font-size: 12.5px; background: var(--bg-3); border: 1px solid var(--line-2);
+      padding: 1px 7px; border-radius: 5px; color: var(--fg); }
+
+/* Axis overview cards */
+.axis-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+              gap: 12px; margin: 22px 0 26px; }
+.axis-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 11px; padding: 16px 17px; }
+.axis-card h3 { margin: 0 0 8px; font-size: 12px; letter-spacing: .8px; color: var(--accent); }
+.axis-card p { margin: 0 0 10px; font-size: 13px; line-height: 1.55; }
+.axis-card .count { font-size: 11.5px; color: var(--fg-3); }
+
+/* Numbered rules */
+.rule { display: grid; grid-template-columns: 34px 1fr; gap: 14px; margin-bottom: 20px; }
+.rule-n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+          background: var(--accent); color: #06121f; font-weight: 700; font-size: 13px; }
+.rule h3 { margin: 3px 0 6px; font-size: 15px; }
+.rule p { margin: 0; font-size: 13.5px; }
+
+/* Vocabulary tables */
+.vocab { width: 100%; border-collapse: collapse; margin: 10px 0 6px; }
+.vocab thead th { text-align: left; font-size: 11px; letter-spacing: .5px; color: var(--fg-3);
+                  font-weight: 600; padding: 0 12px 7px 0; border-bottom: 1px solid var(--line); }
+.vocab td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line);
+            font-size: 13px; color: var(--fg-2); vertical-align: top; }
+.vocab td:first-child { width: 210px; white-space: normal; }
+.vocab .eg { display: block; margin-top: 3px; font-size: 12px; color: var(--fg-3); }
+
+/* Note callouts */
+.note { background: var(--bg-2); border-left: 3px solid var(--accent); border-radius: 0 9px 9px 0;
+        padding: 14px 17px; margin: 18px 0; font-size: 13px; color: var(--fg-2); line-height: 1.7; }
+.note.tight { margin: 10px 0 22px; font-size: 12.5px; }
+
+/* Side-by-side distinctions */
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 22px; }
+.pair > div { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.pair h4 { margin: 0 0 7px; font-size: 13px; color: var(--fg); }
+.pair p { margin: 0; font-size: 12.5px; }
+
+/* Confusing cases */
+.cases { display: grid; gap: 12px; }
+.case { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 15px 17px; }
+.case h4 { margin: 0 0 7px; font-size: 13.5px; color: var(--warn); }
+.case p { margin: 0; font-size: 13px; }
+
+/* FAQ */
+.faq { margin: 0; }
+.faq dt { font-size: 13.5px; color: var(--fg); font-weight: 620; margin-top: 18px; }
+.faq dd { margin: 6px 0 0; font-size: 13px; color: var(--fg-2); }
+
+.tail { text-align: center; margin-top: 60px; }
+.primary-link { display: inline-block; background: var(--accent); color: #06121f; font-weight: 640;
+                text-decoration: none; padding: 11px 24px; border-radius: var(--radius); }
+.primary-link:hover { background: #78baff; }
+
+@media (max-width: 640px) {
+  .vocab td:first-child { width: auto; display: block; padding-bottom: 4px; }
+  .vocab td { display: block; border-bottom: none; }
+  .vocab tr { display: block; border-bottom: 1px solid var(--line); padding: 8px 0; }
+}
